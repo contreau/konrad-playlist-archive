@@ -2,6 +2,10 @@
 	let { children } = $props();
 </script>
 
+<svelte:head>
+	<title>Konrad's Songbook</title>
+</svelte:head>
+
 <header>
 	<img src="/konrad-pfp--180x180.png" alt="Konrad" height="180" width="180" />
 	<div>
