@@ -1,34 +1,12 @@
 import type { playlistJSON } from "./types.ts";
 import { unescape } from "@std/html/entities";
-
-function formatDate(dateString: string): string {
-  const months: Record<string, string> = {
-    "01": "January",
-    "02": "February",
-    "03": "March",
-    "04": "April",
-    "05": "May",
-    "06": "June",
-    "07": "July",
-    "08": "August",
-    "09": "September",
-    "10": "October",
-    "11": "November",
-    "12": "December",
-  };
-  const dateComponents = dateString.split("-");
-  let day = dateComponents[1];
-  if (day[0] === "0") {
-    day = day[1];
-  }
-  return `${months[dateComponents[0]]} ${day}, ${dateComponents[2]}`;
-}
+import { merge_sort, formatDate } from "./functions.ts";
 
 // read in playlists.json
 const decoder = new TextDecoder("utf-8");
 const data = await Deno.readFile("./data/playlists.json");
 const decodedData: string = decoder.decode(data);
-let playlists: playlistJSON | string = JSON.parse(decodedData);
+const playlists: playlistJSON | string = JSON.parse(decodedData);
 
 // reformat
 for (let i = 0; i < playlists.length; i++) {
@@ -42,8 +20,22 @@ for (let i = 0; i < playlists.length; i++) {
   }
 }
 
-// write out new file
-playlists = JSON.stringify(playlists);
+// sort playlists by dateCreated into two copies, one ascending and one descending
+let playlists_ascending: playlistJSON | string = merge_sort(
+  playlists as playlistJSON
+);
+let playlists_descending: playlistJSON | string = playlists_ascending
+  .slice()
+  .reverse();
+
+// write out new files
+playlists_ascending = JSON.stringify(playlists_ascending);
+playlists_descending = JSON.stringify(playlists_descending);
 const encoder = new TextEncoder();
-const writeData: Uint8Array = encoder.encode(playlists);
-await Deno.writeFile("./web/playlists-web.json", writeData);
+const write_ascending_pl: Uint8Array = encoder.encode(playlists_ascending);
+const write_descending_pl: Uint8Array = encoder.encode(playlists_descending);
+await Deno.writeFile("./web/playlists-web-ascending.json", write_ascending_pl);
+await Deno.writeFile(
+  "./web/playlists-web-descending.json",
+  write_descending_pl
+);
