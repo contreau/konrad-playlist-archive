@@ -6,7 +6,7 @@ Konrad was perhaps the biggest supporter of my interest in coding and was a big 
 
 This repository includes the essential data of all 826 playlists, in both JSON and CSV formats, as well as the Python script I wrote to retrieve and organize it.
 
-There's also some TypeScript in there I wrote to format the JSON file for a soon-to-launch web app of Konrad's epic curation.
+The web app of Konrad's epic curation now lives at [komp3nd1um.app](https://komp3nd1um.app).
 
 The following example illustrates one playlist in JSON format:
 
